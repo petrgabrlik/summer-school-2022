@@ -161,6 +161,10 @@ class TrajectoryUtils():
 
         wps_interp = []
 
+        print("********************** waypoints **********************")
+        for i in range(len(waypoints)):
+            print("waypoint {}: {} {}".format(i, waypoints[i].point, waypoints[i].heading))
+
         idx = 0
         while idx != (len(waypoints) - 1):
             g_from  = waypoints[idx]
@@ -189,6 +193,10 @@ class TrajectoryUtils():
             # include start node
             wps_interp.append(subtraj[0])
 
+            # compute the heading change per the unit of distance (meter) for the current segment
+            hdg_per_dist = d_hdg / subtraj_len
+            print("hdg_per_dist: {}".format(hdg_per_dist))
+
             # interpolate headings
             for i in range(1, len(subtraj) - 1):
 
@@ -200,8 +208,13 @@ class TrajectoryUtils():
                 #  - interpolate the heading linearly (create a function of distance between two points of the subpath)
                 #  - do not forget to wrap angle to <-pi, pi) (see/use wrapAngle() in utils.py)
 
+                # compute the distance between the consecutive waypoints
+                seg_len = self.getLength([subtraj[i], subtraj[i+1]])
+
                 # [STUDENTS TODO] Change variable 'hdg_interp', nothing else
-                hdg_interp = waypoints[0].heading
+                # hdg_interp = waypoints[0].heading
+                # compute the heading for the current waypoint
+                hdg_interp = wrapAngle(wps_interp[-1].heading + (hdg_per_dist * seg_len))
 
                 # replace heading
                 hdg_from   = hdg_interp
@@ -211,6 +224,10 @@ class TrajectoryUtils():
 
         # include the very last node
         wps_interp.append(waypoints[-1])
+
+        # print the interpolated waypoints
+        for i in range(len(wps_interp)):
+            print("waypoint {}: {} {}".format(i, wps_interp[i].point, wps_interp[i].heading))
 
         return wps_interp
 
