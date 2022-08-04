@@ -72,7 +72,10 @@ class Node:
         b = self.pos[1] - self.goal[1]
         c = self.pos[2] - self.goal[2]
 
-        raise NotImplementedError('[STUDENTS TODO] Heuristic function guiding the state space exploration not implemented. You have to finish it on your own.')
+        # raise NotImplementedError('[STUDENTS TODO] Heuristic function guiding the state space exploration not implemented. You have to finish it on your own.')
+        dist = sqrt(a**2 + b**2 + c**2)
+        # print(dist)
+        return dist
 # # #}
 
 # # #{ class AStar
@@ -92,13 +95,17 @@ class AStar():
         return sqrt(a**2 + b**2 + c**2)
 
     def halveAndTest(self, path):
+        # print("************* staightening ***************")
         pt1 = path[0]
         pt2 = path[-1]
+
+        # print("path to straighten: ", path)
+        # print("points in the path: ", len(path))
         
         if len(path) <= 2:
             return path
 
-        raise NotImplementedError('[STUDENTS TODO] A*: path straightening is not finished. Finish it on your own.')
+        # raise NotImplementedError('[STUDENTS TODO] A*: path straightening is not finished. Finish it on your own.')
         # Tips:
         #  - divide the given path by a certain ratio and use this method recursively
 
@@ -106,12 +113,20 @@ class AStar():
         if self.grid.obstacleBetween(pt1, pt2):
 
             # [STUDENTS TODO] Replace seg1 and seg2 variables effectively
-            seg1 = path[:1]
-            seg2 = path[1:]
+            half_idx = len(path) // 2
+            # print("half_idx: ", half_idx)
+            seg1 = path[:half_idx]
+            seg2 = path[half_idx:]
+            # print("recursive staightening of seg1: ", seg1)
+            seg1 = self.halveAndTest(seg1)
+            # print("recursive staightening of seg2: ", seg2)
+            seg2 = self.halveAndTest(seg2)
 
             seg1.extend(seg2)
+            # print("path with obstacles straightened to: ", seg1)
             return seg1
-        
+
+        # print("no obstacles, staightened to: ", [pt1, pt2])
         return [pt1, pt2]
 
     def generatePath(self, m_start, m_goal):
