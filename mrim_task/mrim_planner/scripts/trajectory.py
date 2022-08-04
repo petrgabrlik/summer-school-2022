@@ -588,7 +588,9 @@ class TrajectoryUtils():
         pc_vel     = constraint.JointVelocityConstraint(v_lims)
         pc_acc     = constraint.JointAccelerationConstraint(a_lims)
         gridpoints = np.linspace(0, path.duration, 1000)  # 1000 points
-        instance   = algo.TOPPRA([pc_vel, pc_acc], path, parametrizer="ParametrizeConstAccel", gridpoints=gridpoints)
+        # instance   = algo.TOPPRA([pc_vel, pc_acc], path, parametrizer="ParametrizeConstAccel", gridpoints=gridpoints)
+        instance = algo.TOPPRA([pc_vel, pc_acc], path, parametrizer="ParametrizeConstAccel",
+                               gridpoints=np.linspace(0, path.duration, 4 * len(waypoints)))
         trajectory = instance.compute_trajectory()
 
         return trajectory
